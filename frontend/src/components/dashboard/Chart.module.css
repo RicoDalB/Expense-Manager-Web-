@@ -1,0 +1,30 @@
+.chartContainer {
+    background: white;
+    
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Stile per il menu a tendina */
+.dropdown {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* Tooltip per il grafico */
+.recharts-tooltip-wrapper {
+    font-size: 14px;
+    background-color: white;
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}

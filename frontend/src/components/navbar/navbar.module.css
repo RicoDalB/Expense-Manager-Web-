@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/*font globale*/
+body{
+    font-family: 'Inter', sans-serif;
+}
+/* contenitore navbar */
+.navbar {
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    
+}
+/* Logo*/
+.logoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    height: 90px;
+    border-bottom: 1px solid #ddd;
+}
+.logo{
+    width: 50px;
+    height: auto;
+}
+.logoText{
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 10px;
+    color: black;
+}
+/*Menu*/
+.navLinks{
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+/* stile dei link */
+.navLinks li {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+.active{
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    font-weight: bold;
+}
+.navLinks li:hover{
+    background-color: #f5f5f5;
+}
+.navLinks li a{
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+/*icon*/
+/* Icone SVG */
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+/* Sezione Logout */
+.logout {
+    margin-top: auto;
+    padding: 12px 20px;
+    border-top: 1px solid #ddd;
+}
+
+.logout a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.logout a:hover {
+    color: grey;
+}
+ 

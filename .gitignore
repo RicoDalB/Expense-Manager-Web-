@@ -1,0 +1,9 @@
+# Ambiente virtuale
+ExpenseVenv/
+
+# File Python inutili
+__pycache__/
+*.pyc
+
+# File di sistema
+.DS_Store

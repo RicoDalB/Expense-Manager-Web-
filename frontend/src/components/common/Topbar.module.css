@@ -1,0 +1,62 @@
+.topbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    position: fixed;
+    width: calc(100% - 240px);
+    left: 249px;
+    top: 0;
+    height: 110px;
+    z-index: 1000;
+}
+/*sezione centrale*/
+.leftSection{
+    flex: 1;
+    align-items: center;
+    display: flex;
+}
+/*titolo pagina*/
+.pageTitle{
+    font-size: 25px;
+    font-weight: 500;
+}
+/*bottone aggiungi spesa*/
+.centerSection{
+    flex: 1;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.addExpenseButton{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.addExpenseButton:hover{
+    background-color: #0056b3;
+}
+.rightSection{
+    display: flex;
+    align-items: center;
+}
+.profileButton{
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.profileButton:hover{
+    background-color: #e9ecef;
+}

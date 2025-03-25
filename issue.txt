@@ -1,0 +1,26 @@
+non funzionano 
+Expenses
+- update expenses -> funziona con imput desc, amou, date, cat_id
+API FUNZIONANO PERFETTAMENTE 
+
+ATTUALMENTE FRONTEND 
+- Panormaica spese, grafico vuoto funziona male (mesi sballati) 
+- Spese piu alte : nessuna spesa recente
+
+FRONTEND OTTIMALE 
+- Panormaica spese con grafico
+- Pese piu alte 
+- ultime spese
+
+
+
+
+Trends: data inizio-fine -> ti da totale speso nel giorno e sotto tutte le sepese
+Filtro: data inizio fine, id category e min/max spese e ti totna le spese
+forse fontend non ha ancora un modo di visualizzare le spese per questo non si vedono attualmente
+
+
+npm run dev    
+uvicorn main:app --reload
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+

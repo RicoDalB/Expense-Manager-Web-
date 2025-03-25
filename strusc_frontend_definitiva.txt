@@ -1,0 +1,66 @@
+expense-manager-frontend/
+│── public/                           # File statici pubblici
+│   ├── favicon.ico                   # Icona del sito
+│   ├── index.html                     # File principale della pagina web
+│   ├── vite.svg                       # Logo predefinito (da sostituire)
+│
+│── src/                               # Codice sorgente principale
+│   ├── assets/                        # File statici (icone, immagini, SVG)
+│   │   ├── logo.svg
+│   │   ├── icons/
+│   │   ├── styles/
+│
+│   ├── components/                    # Componenti riutilizzabili
+│   │   ├── navbar/                    # Barra di navigazione
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Navbar.module.css
+│   │   │   ├── index.ts                # Esportazioni centralizzate
+│   │   │
+│   │   ├── dashboard/                  # Componenti per la homepage
+│   │   │   ├── ExpenseChart.tsx        # Grafico delle spese
+│   │   │   ├── ExpenseList.tsx         # Lista delle spese
+│   │   │   ├── AddExpenseButton.tsx    # Pulsante per aggiungere spese
+│   │   │   ├── StatsCard.tsx           # Riquadro statistiche (opzionale)
+│   │   │   ├── index.ts                # Esportazioni centralizzate
+│   │   │
+│   │   ├── categories/                 # Componenti per gestione categorie
+│   │   │   ├── CategoryList.tsx        # Lista categorie
+│   │   │   ├── CategoryForm.tsx        # Modulo per aggiungere/modificare categorie
+│   │   │   ├── index.ts
+│   │   │
+│   │   ├── settings/                   # Impostazioni utente
+│   │   │   ├── SettingsPanel.tsx
+│   │   │   ├── index.ts
+│
+│   ├── pages/                          # Pagine principali
+│   │   ├── Dashboard.tsx               # Homepage
+│   │   ├── Expenses.tsx                # Pagina con lista completa delle spese
+│   │   ├── Categories.tsx              # Pagina per gestione categorie
+│   │   ├── Settings.tsx                # Pagina delle impostazioni
+│
+│   ├── services/                       # Servizi per chiamate API
+│   │   ├── api.ts                      # Configurazione API (Axios)
+│   │   ├── expensesService.ts          # Funzioni API per le spese
+│   │   ├── categoriesService.ts        # Funzioni API per le categorie
+│
+│   ├── hooks/                          # Custom hooks (per ottimizzare il codice)
+│   │   ├── useExpenses.ts              # Hook per gestire le spese
+│   │   ├── useCategories.ts            # Hook per le categorie
+│
+│   ├── types/                          # Definizione dei tipi TypeScript
+│   │   ├── expense.ts
+│   │   ├── category.ts
+│
+│   ├── context/                        # Stato globale (opzionale)
+│   │   ├── ExpenseContext.tsx
+│   │   ├── CategoryContext.tsx
+│
+│   ├── App.tsx                         # Componente principale dell'app
+│   ├── main.tsx                        # Punto di ingresso React
+│   ├── routes.tsx                      # Configurazione del routing
+│
+│── .gitignore                          # File da ignorare in Git
+│── package.json                        # Configurazione delle dipendenze
+│── tailwind.config.js                   # Configurazione di TailwindCSS
+│── tsconfig.json                        # Configurazione TypeScript
+│── vite.config.ts                       # Configurazione di Vite

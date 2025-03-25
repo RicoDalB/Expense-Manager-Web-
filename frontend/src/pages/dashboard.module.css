@@ -1,0 +1,56 @@
+
+.dashboardWrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.dashboardContainer {
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    margin-left: 240px;
+    margin-top: 100px;
+}
+
+/* Header con titolo e bottone */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dashboardTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+/* Layout della dashboard */
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Sezioni */
+.chartSection,
+.expenseSummarySection,
+.recentExpensesSection {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+/*Responsive design*/
+@media (max-width: 1024px) {
+    .dashboardGrid{
+        grid-template-columns: 1fr;
+    }
+    .recentExpensesSection{
+        order: 3;
+    }
+}
