@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from collections import defaultdict
+from datetime import datetime
 from app.database import SessionLocal
 from app.models.expense import Expense
-from app.models.category import Category  # Importiamo il modello Category
-from datetime import datetime
+from app.models.category import Category
 
 router = APIRouter()
 
-# Dependecy per ottenere sessione del database
+# DB Session Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -17,43 +17,63 @@ def get_db():
     finally:
         db.close()
 
-# 📌 1. Riepilogo delle spese totali per un periodo
+# 🔹 Helper per serializzare categoria
+def serialize_category(cat):
+    return {
+        "id": cat.id,
+        "name": cat.name,
+        "icon": cat.icon or "default.png"
+    } if cat else {
+        "id": 0,
+        "name": "Sconosciuta",
+        "icon": "default.png"
+    }
+
+# 1. Riepilogo spese totali
 @router.get("/summary")
 def get_summary(start_date: str, end_date: str, db: Session = Depends(get_db)):
     try:
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
     except ValueError:
-        raise HTTPException(status_code=400, detail="Formato data non valido, usare YYYY-MM-DD")
+        raise HTTPException(status_code=400, detail="Formato data non valido (YYYY-MM-DD)")
 
-    expenses = db.query(Expense).filter(Expense.date.between(start_date, end_date)).all()
+    expenses = db.query(Expense).options(joinedload(Expense.category)).filter(
+        Expense.date.between(start, end)
+    ).all()
+
     total_expenses = sum(exp.amount for exp in expenses)
-    num_expenses = len(expenses)
 
     return {
-        "start_date": start_date.strftime("%Y-%m-%d"),
-        "end_date": end_date.strftime("%Y-%m-%d"),
+        "start_date": start_date,
+        "end_date": end_date,
         "total_expenses": total_expenses,
-        "num_expenses": num_expenses,
+        "num_expenses": len(expenses),
         "expenses": [
             {
                 "id": exp.id,
                 "description": exp.description,
                 "amount": exp.amount,
                 "date": exp.date.strftime("%Y-%m-%d"),
-                "category": {"id": exp.category.id, "name": exp.category.name} if exp.category else None
+                "category": serialize_category(exp.category)
             }
             for exp in expenses
         ]
     }
 
-# 📌 2. Spese raggruppate per categoria
+# 2. Spese per categoria
 @router.get("/by-category")
 def get_expenses_by_category(start_date: str, end_date: str, db: Session = Depends(get_db)):
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato data non valido")
+
     category_totals = (
         db.query(Category.id, Category.name, func.sum(Expense.amount))
         .join(Expense, Expense.category_id == Category.id)
-        .filter(Expense.date.between(start_date, end_date))
+        .filter(Expense.date.between(start, end))
         .group_by(Category.id, Category.name)
         .all()
     )
@@ -67,14 +87,22 @@ def get_expenses_by_category(start_date: str, end_date: str, db: Session = Depen
         ]
     }
 
-# 📌 3. Andamento delle spese nel tempo
+# 3. Trend temporale
 @router.get("/trends")
 def get_expenses_trends(start_date: str, end_date: str, db: Session = Depends(get_db)):
-    expenses = db.query(Expense).filter(Expense.date.between(start_date, end_date)).all()
-    trends = defaultdict(float)
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato data non valido")
 
+    expenses = db.query(Expense).options(joinedload(Expense.category)).filter(
+        Expense.date.between(start, end)
+    ).all()
+
+    trends = defaultdict(float)
     for exp in expenses:
-        key = exp.date.strftime("%Y-%m-%d")  # Usare il formato giornaliero
+        key = exp.date.strftime("%Y-%m-%d")
         trends[key] += exp.amount
 
     return {
@@ -87,22 +115,24 @@ def get_expenses_trends(start_date: str, end_date: str, db: Session = Depends(ge
                 "description": exp.description,
                 "amount": exp.amount,
                 "date": exp.date.strftime("%Y-%m-%d"),
-                "category": {"id": exp.category.id, "name": exp.category.name} if exp.category else None
+                "category": serialize_category(exp.category)
             }
             for exp in expenses
         ]
     }
 
-#  4. Spese più alte effettuate in un periodo
+# 4. Spese più alte
 @router.get("/top-expenses")
 def get_top_expenses(start_date: str, end_date: str, limit: int = 5, db: Session = Depends(get_db)):
-    expenses = (
-        db.query(Expense)
-        .filter(Expense.date.between(start_date, end_date))
-        .order_by(Expense.amount.desc())
-        .limit(limit)
-        .all()
-    )
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato data non valido")
+
+    expenses = db.query(Expense).options(joinedload(Expense.category)).filter(
+        Expense.date.between(start, end)
+    ).order_by(Expense.amount.desc()).limit(limit).all()
 
     return {
         "start_date": start_date,
@@ -113,31 +143,36 @@ def get_top_expenses(start_date: str, end_date: str, limit: int = 5, db: Session
                 "description": exp.description,
                 "amount": exp.amount,
                 "date": exp.date.strftime("%Y-%m-%d"),
-                "category": {"id": exp.category.id, "name": exp.category.name} if exp.category else None
+                "category": serialize_category(exp.category)
             }
             for exp in expenses
         ]
     }
 
-#  5. Spesa media giornaliera e mensile
+# 5. Spesa media
 @router.get("/average")
 def get_average_expense(start_date: str, end_date: str, db: Session = Depends(get_db)):
-    expenses = db.query(Expense).filter(Expense.date.between(start_date, end_date)).all()
-    total_expenses = sum(exp.amount for exp in expenses)
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Formato data non valido")
 
-    days_count = (datetime.strptime(end_date, "%Y-%m-%d") - datetime.strptime(start_date, "%Y-%m-%d")).days + 1
+    expenses = db.query(Expense).filter(Expense.date.between(start, end)).all()
+    total_expenses = sum(exp.amount for exp in expenses)
+    days_count = (end - start).days + 1
     monthly_count = days_count / 30
 
     return {
         "start_date": start_date,
         "end_date": end_date,
         "average_expense": {
-            "daily": total_expenses / days_count if days_count > 0 else 0,
-            "monthly": total_expenses / monthly_count if monthly_count > 0 else 0
+            "daily": total_expenses / days_count if days_count else 0,
+            "monthly": total_expenses / monthly_count if monthly_count else 0
         }
     }
 
-#  6. Filtrare spese per categoria, importo e periodo
+# 6. Filtro
 @router.get("/filter")
 def filter_expenses(
     category_id: int = Query(None, alias="category"),
@@ -147,7 +182,7 @@ def filter_expenses(
     end_date: str = None,
     db: Session = Depends(get_db)
 ):
-    query = db.query(Expense)
+    query = db.query(Expense).options(joinedload(Expense.category))
 
     if category_id:
         query = query.filter(Expense.category_id == category_id)
@@ -156,7 +191,12 @@ def filter_expenses(
     if max_amount:
         query = query.filter(Expense.amount <= max_amount)
     if start_date and end_date:
-        query = query.filter(Expense.date.between(start_date, end_date))
+        try:
+            start = datetime.strptime(start_date, "%Y-%m-%d")
+            end = datetime.strptime(end_date, "%Y-%m-%d")
+            query = query.filter(Expense.date.between(start, end))
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Formato data non valido")
 
     expenses = query.all()
 
@@ -169,7 +209,7 @@ def filter_expenses(
                 "description": exp.description,
                 "amount": exp.amount,
                 "date": exp.date.strftime("%Y-%m-%d"),
-                "category": {"id": exp.category.id, "name": exp.category.name} if exp.category else None
+                "category": serialize_category(exp.category)
             }
             for exp in expenses
         ]

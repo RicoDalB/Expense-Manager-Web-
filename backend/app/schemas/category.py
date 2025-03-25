@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 #rappresenta il fomrato dei dati accettati e restituiti da api per category
 
@@ -15,7 +17,7 @@ class CategoryUpdate(BaseModel):
 class CategoryResponse(BaseModel):
     id: int
     name: str
-    icon: str
+    icon: Optional [str]
 
     class Config:
         from_attributes = True

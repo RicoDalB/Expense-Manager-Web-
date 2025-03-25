@@ -8,4 +8,4 @@ class Category(Base):  # Il modello deve ereditare da Base
     id = Column(Integer, primary_key=True, index=True)  
     name = Column(String, unique=True, nullable=False)  
     color = Column(String, nullable=True)  
-    icon =Column (String, nullable= True)
+    icon =Column (String)

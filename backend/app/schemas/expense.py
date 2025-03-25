@@ -1,3 +1,6 @@
+from typing import Optional
+from app.schemas.category import CategoryResponse
+
 from pydantic import BaseModel
 from datetime import date
 from app.schemas.category import CategoryResponse  # Importiamo lo schema della categoria
@@ -16,7 +19,7 @@ class ExpenseResponse(BaseModel):
     description: str
     amount: float
     date: date
-    category: CategoryResponse  # 🔹 Qui restituiamo un oggetto CategoryResponse, non solo un ID
+    category: Optional[CategoryResponse]  # 🔹 Qui restituiamo un oggetto CategoryResponse, non solo un ID
 
     class Config:
         from_attributes = True  # Compatibilità con SQLAlchemy
