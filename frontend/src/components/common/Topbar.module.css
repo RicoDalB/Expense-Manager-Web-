@@ -60,3 +60,15 @@
 .profileButton:hover{
     background-color: #e9ecef;
 }
+/* CSS per la notifica */
+.success-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

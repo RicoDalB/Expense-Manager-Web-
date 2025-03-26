@@ -21,20 +21,32 @@ def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Categoria già esistente.")
 
+     # ✅ Costruisci l'URL completo dell'icona
     base_url = "http://127.0.0.1:8000/icons/"
-    icon_filename = category.icon if category.icon else "default.png"
-    icon_path = f"{base_url}{icon_filename}"
+    icon_name = category.icon or "default"
+    if not icon_name.endswith(".png"):
+        icon_name += ".png"
+    icon_path = f"{base_url}{icon_name}"
 
     new_cat = Category(name=category.name, icon=icon_path)
     db.add(new_cat)
     db.commit()
     db.refresh(new_cat)
+
     return new_cat
 
 # 2️⃣ Ottieni tutte le categorie
 @router.get("/", response_model=list[CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
-    return db.query(Category).all()
+    categories = db.query(Category).all()
+
+    # Aggiungi ".png" all'icona di ogni categoria se non è presente
+    for category in categories:
+        if not category.icon.endswith(".png"):
+            category.icon = f"{category.icon}.png"  # Aggiungi .png
+
+    return categories
+
 
 # 3️⃣ Ottieni categoria per ID
 @router.get("/{category_id}", response_model=CategoryResponse)
