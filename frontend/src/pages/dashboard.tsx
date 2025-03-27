@@ -13,18 +13,20 @@ const Dashboard = () => {
             {/* contenuto della dashboard */}
             <div className={styles.dashboardGrid}>
                 {/*sezione grafico */}
-                <div className={styles.chartSection}>
+                <div className={`${styles.dashboardCard} ${styles.chartSection}`}>
                 <Chart />
                 </div>
 
                 {/*Sezione riepilogo spese*/}
-                <div className={styles.ExpenseSummarySection}>
-                    <ExpenseSummary />
-                </div>
+                
 
                 {/* Sezione Ultime spese */}
                 <div className={styles.recentExpensesSection}>
                     <RecentExpenses />
+                </div>
+
+                <div className={`${styles.dashboardCard} ${styles.expenseSummarySection}`}>
+                    <ExpenseSummary />
                 </div>
             </div>
         </div>

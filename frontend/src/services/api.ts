@@ -2,7 +2,7 @@ const BASE_URL ="http://127.0.0.1:8000"; // Modificare se il backend è ospitato
 
 // 🔹 API per la gestione delle spese
 export const fetchExpenses = async () => {
-  const res = await fetch(`${BASE_URL}/expenses/`);
+  const res = await fetch(`${BASE_URL}/expenses/expenses/`);
   if (!res.ok) throw new Error("Errore nel recupero delle spese");
   return res.json();
 };
